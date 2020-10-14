@@ -1,12 +1,20 @@
--- v 1.1
+-- v 1.2
 
 local component = require("component")
 local event = require("event")
 local modem = component.modem
 local gpu = component.gpu
 local gridSize = 7 --amount of grid cells to display
+local bcolor = 0x000000
 gpu.setResolution(gridSize*2,gridSize)
 local RAD_SEN_PORT = 24487
+local timeout = {} -- keeps track of when the slave last responded
+for i=1,gridSize do 
+    timeout[i] = {}
+    for j=1,gridSize do
+        timeout[i][j]=0
+    end
+end
 
 function colorF(value)
     return value / (1 + value)
@@ -40,25 +48,20 @@ end
 local function set(x,z,color)
     gpu.setBackground(color)
     gpu.set(2 * z + 1, x + 1, "  ")
-    gpu.setBackground(0xFFFFFF)
+    gpu.setBackground(bc)
 end
 
-gpu.setBackground(0xFFFFFF)
+gpu.setBackground(bc)
 clearScreen()
 
 -- open ports
---print("Opening port", RAD_SEN_PORT)
 modem.open(RAD_SEN_PORT)
---print("Listening on port", RAD_SEN_PORT)
 
 event.listen("modem_message", function(ev, on, from, port, dist, msgId, cx, cz, level) 
-    --print("message",from, port, msgId, level)
-    --print(RAD_SEN_PORT == port, msgId == "radiation_sensor:response")
+
     if RAD_SEN_PORT == port and msgId == "radiation_sensor:response" then
-        --print(getPercentage(level))
-        --print(getColor(level))
-        --print("setting color", level, getPercentage(level), getColor(level))
         set(cx,cz,getColor(level))
+        timeout[cx+1][cz+1]=0
     end
 end
 )
@@ -66,6 +69,14 @@ end
 event.listen("interrupted", function() os.exit() end)
 
 while true do
+    for i=1,gridSize do 
+        for j=1,gridSize do
+            timeout[i][j] = timeout[i][j]+1
+            if timeout[i][j] > 3 then
+                set(i-1,j-1,bc)
+            end
+        end
+    end
     modem.broadcast(RAD_SEN_PORT, "radiation_sensor:query")
     os.sleep(2)
 end
