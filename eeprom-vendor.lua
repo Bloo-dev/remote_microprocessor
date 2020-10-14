@@ -5,6 +5,7 @@ local component = require("component")
 local shell = require("shell")
 local modem = component.modem
 
+print("Now listening for firmware requests on port 28820...")
 modem.open(28820)
 
 local args, ops = shell.parse(...)
@@ -19,10 +20,11 @@ while true do
         break
     end
     if port == 28820 and msg == "remote_microprocessor:firmware_request" then
-        print("Received firmware request. Please enter coords:")
+        print("Received firmware request.")
         local data = io.open(file):read("*a")
         if parameters then
-            print("Sending response to", from, "on port", port, "...")
+            print("Preparing response for", from, "on port", port, "...")
+            print("Please enter the coords of this slave:")
             modem.send(from, port, "remote_microprocessor:firmware_response", data, io.read())
         else
             print("Sending response to", from, "on port", port, "...")
