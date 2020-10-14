@@ -8,7 +8,7 @@ local arg = ...
 
 if arg == nil 
 then
-    cx, cz = drive.readByte(1), drive,readByte(2)
+    cx, cz = drive.readByte(1), drive.readByte(2)
 else
     cx, cz = load("return " .. arg)()
     drive.writeByte(1,cx)
