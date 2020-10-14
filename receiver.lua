@@ -48,10 +48,10 @@ end
 local function set(x,z,color)
     gpu.setBackground(color)
     gpu.set(2 * z + 1, x + 1, "  ")
-    gpu.setBackground(bc)
+    gpu.setBackground(bcolor)
 end
 
-gpu.setBackground(bc)
+gpu.setBackground(bcolor)
 clearScreen()
 
 -- open ports
@@ -73,7 +73,7 @@ while true do
         for j=1,gridSize do
             timeout[i][j] = timeout[i][j]+1
             if timeout[i][j] > 3 then
-                set(i-1,j-1,bc)
+                set(i-1,j-1,bcolor)
             end
         end
     end
