@@ -43,7 +43,7 @@ do
               error("The network card must be wireless")
           end
             boot_invoke(modem, "open", port)
-            boot_invoke(modem, "setWakeMessage","remote_microprocessor:remote_wake")
+            boot_invoke(modem, "setWakeMessage","remote_microprocessor:remote_boot")
         else
             error("No network card found")
         end
