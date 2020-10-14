@@ -19,7 +19,7 @@ while true do
         break
     end
     if port == 28820 and msg == "remote_microprocessor:firmware_request" then
-        print("Received firmware request.")
+        print("Received firmware request. Please enter coords:")
         local data = io.open(file):read("*a")
         if parameters then
             print("Sending response to", from, "on port", port, "...")
