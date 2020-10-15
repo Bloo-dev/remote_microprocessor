@@ -3,7 +3,6 @@ local version = "v1.5"
 local modem = component.proxy(component.list("modem")())
 local radiation_sensor = component.proxy(component.list("nc_geiger_counter")())
 local drive = component.proxy(component.list("drive")())
-local computer = component.proxy(component.list("computer")())
 local RAD_SEN_PORT = 24487
 local arg = ...
 
