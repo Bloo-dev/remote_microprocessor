@@ -1,4 +1,4 @@
-local version = "v1.3"
+local version = "v1.4"
 local sourceFunc, data
 
 local _error = error
@@ -62,6 +62,10 @@ do
                             error("Unable to compile recieved code: ", err)
                         end
                         
+                        break
+                    end
+                    if answer == "remote_microprocessor:remote_shutdown" then
+                        computer.shutdown()
                         break
                     end
                 end
