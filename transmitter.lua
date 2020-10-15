@@ -1,4 +1,4 @@
-local version = "v1.4"
+local version = "v1.5"
 
 local modem = component.proxy(component.list("modem")())
 local radiation_sensor = component.proxy(component.list("nc_geiger_counter")())
