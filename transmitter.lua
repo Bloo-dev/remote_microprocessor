@@ -3,6 +3,7 @@ local version = "v1.4"
 local modem = component.proxy(component.list("modem")())
 local radiation_sensor = component.proxy(component.list("nc_geiger_counter")())
 local drive = component.proxy(component.list("drive")())
+local computer = component.proxy(component.list("computer")())
 local RAD_SEN_PORT = 24487
 local arg = ...
 
@@ -16,11 +17,12 @@ else
 end
 
 -- open ports
-modem.open(24487)
+modem.open(RAD_SEN_PORT)
 
 while true do
     _,_,from,port,dist,msg = computer.pullSignal("modem_message")
-    if port == RAD_SEN_PORT and msg == "radiation_sensor:query" then 
+    if port == RAD_SEN_PORT then
+        if msg == "radiation_sensor:query" then 
         local level = radiation_sensor.getChunkRadiationLevel()
 
         modem.send(
@@ -28,6 +30,10 @@ while true do
             port, 
             "radiation_sensor:response", cx, cz, level
         )
+        end
+        if msg == "radiation_sensor:shutdown" then
+            computer.shutdown()
+        end
     end
     
 end
